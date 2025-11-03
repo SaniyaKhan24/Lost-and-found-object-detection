@@ -2,40 +2,97 @@
 
 {% block content %}
 <div class="auth-container">
-    <div class="auth-header">
-        <h1>Welcome Back</h1>
-        <p>Please sign in to continue</p>
-    </div>
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">
+                <i class="fas fa-sign-in-alt"></i>
+            </div>
+            <h1>Welcome Back</h1>
+            <p>Please sign in to continue</p>
+        </div>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-error">
-                    {{ message }}
-                    <button type="button" class="alert-close">&times;</button>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-error">
+                        <span>{{ message }}</span>
+                        <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('login') }}" class="auth-form">
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-user"></i>
+                    Username
+                </label>
+                <input 
+                    type="text" 
+                    class="form-input" 
+                    name="username" 
+                    required 
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i>
+                    Password
+                </label>
+                <div style="position: relative;">
+                    <input 
+                        type="password" 
+                        class="form-input" 
+                        id="password"
+                        name="password" 
+                        required 
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        style="padding-right: 45px;"
+                    />
+                    <button 
+                        type="button" 
+                        onclick="togglePassword()"
+                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-light); font-size: 1.1rem; padding: 5px;"
+                        aria-label="Toggle password visibility"
+                    >
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </button>
                 </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+            </div>
 
-    <form method="post" action="{{ url_for('login') }}" class="auth-form">
-        <div class="form-group">
-            <label class="form-label">Username</label>
-            <input type="text" class="form-input" name="username" required placeholder="Enter your username" />
+            <div class="form-actions">
+                <button type="submit" class="button button-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+            </div>
+        </form>
+
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up</a></p>
         </div>
-
-        <div class="form-group">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-input" name="password" required placeholder="Enter your password" />
-        </div>
-
-        <div class="form-actions">
-            <button type="submit" class="button button-primary">Sign In</button>
-        </div>
-    </form>
-
-    <div class="auth-footer">
-        <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up</a></p>
     </div>
 </div>
+
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+</script>
 {% endblock %}
